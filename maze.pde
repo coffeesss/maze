@@ -8,9 +8,10 @@ final color WATER_COLOR = #325fff;
 final color TREE_COLOR = #3a8725;
 
 final float CASE_SIZE = 10;  // size of one case
+final float CAMERA_Y = -5;   // camera permanent attitude
 
 char[][] map;  // loaded map
-Camera cam;
+Camera camera;
 
 void setup() {
   size(1000, 600, P3D);
@@ -27,7 +28,7 @@ void setup() {
   }
   
   /* Setup camera */
-  cam = new Camera(this, 30, -5, 30);
+  camera = new Camera(this, 30, CAMERA_Y, 30);
 }
 
 void draw() {
@@ -37,25 +38,25 @@ void draw() {
   translate(width / 2, height / 2, 0);
   
   /* Navigate camera */
-  if (keyPressed && key == CODED) {
+  if (keyPressed && key == CODED) {    
     switch (keyCode) {
       case UP:
-        cam.dolly(-0.5);
+        onStepForward(camera);
         break;
       case DOWN:
-        cam.dolly(0.5);
+        onStepBackward(camera);
         break;
       case LEFT:
-        cam.truck(-0.5);
+        onStepLeft(camera);
         break;
       case RIGHT:
-        cam.truck(0.5);
+        onStepRight(camera);
         break;
     }
   }
   
   /* Pose camera */
-  cam.feed();
+  camera.feed();
   
   /* Draw map */
   for (int row = 0; row < map.length; row++) {
@@ -89,7 +90,47 @@ void draw() {
 
 // TODO: remake it
 void mouseMoved() {
-  cam.look(radians(mouseX - pmouseX) / 2.0, radians(mouseY - pmouseY) / 2.0);
+  camera.look(radians(mouseX - pmouseX) / 2.0, radians(mouseY - pmouseY) / 2.0);
+}
+
+/**
+ * Handler of command to move camera forward.
+ *
+ * @param camera camera object
+ */
+void onStepForward(final Camera camera) {
+  camera.dolly(-0.5);
+  final float[] position = camera.position();
+  camera.jump(position[0], CAMERA_Y, position[2]);  // force attitude
+}
+
+/**
+ * Handler of command to move camera backward.
+ *
+ * @param camera camera object
+ */
+void onStepBackward(final Camera camera) {
+  camera.dolly(0.5);
+  final float[] position = camera.position();
+  camera.jump(position[0], CAMERA_Y, position[2]);  // force attitude
+}
+
+/**
+ * Handler of command to move camera left.
+ *
+ * @param camera camera object
+ */
+void onStepLeft(final Camera camera) {
+  camera.truck(-0.5);
+}
+
+/**
+ * Handler of command to move camera right.
+ *
+ * @param camera camera object
+ */
+void onStepRight(final Camera camera) {
+  camera.truck(0.5);
 }
 
 /**
