@@ -38,7 +38,9 @@ void draw() {
   translate(width / 2, height / 2, 0);
   
   /* Navigate camera */
-  if (keyPressed && key == CODED) {    
+  if (keyPressed && key == CODED) {
+    final float[] position = camera.position();
+    
     switch (keyCode) {
       case UP:
         onStepForward(camera);
@@ -52,6 +54,11 @@ void draw() {
       case RIGHT:
         onStepRight(camera);
         break;
+    }
+    
+    /* If we are in non allowed area (wall, tree or water) cancel the movement */
+    if (!isAllowedCase(camera)) {
+      camera.jump(position[0], CAMERA_Y, position[2]);  // reset previous position
     }
   }
   
@@ -131,6 +138,47 @@ void onStepLeft(final Camera camera) {
  */
 void onStepRight(final Camera camera) {
   camera.truck(0.5);
+}
+
+/**
+ * Checks if camera is in allowed map case.
+ *
+ * @param camera camera object
+ *
+ * @return true - camera is in allowed map case, false - not.
+ */
+boolean isAllowedCase(final Camera camera) {
+  final char caseContent = caseContent(camera);
+  return caseContent == ' '
+    || caseContent == 'S'
+    || caseContent == 'F';
+}
+
+/**
+ * Returns the content of current case of the map.
+ *
+ * @param camera camera object
+ *
+ * @return character of content of the current case of the map
+ */
+char caseContent(final Camera camera) {
+  final int[] caseIds = currentCase(camera);
+  return map[caseIds[0]][caseIds[1]];
+}
+
+/**
+ * Returns the case (row & col) in which camera is currently situated.
+ *
+ * @param camera camera object
+ *
+ * @return array with row & col in which camera currently situated
+ */
+int[] currentCase(final Camera camera) {
+  final float[] position = camera.position();
+  
+  return new int[]{
+    (int) (position[2] / CASE_SIZE),
+    (int) (position[0] / CASE_SIZE) };
 }
 
 /**
