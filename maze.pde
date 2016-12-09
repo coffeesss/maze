@@ -7,6 +7,10 @@ final color GROUND_COLOR = #89ff93;
 final color WATER_COLOR = #325fff;
 final color TREE_COLOR = #3a8725;
 
+/* Textures */
+PImage WALL_TEXTURE;
+PImage GROUND_TEXTURE;
+
 final float CASE_SIZE = 10;  // size of one case
 final float CAMERA_Y = -5;   // camera permanent attitude
 
@@ -29,6 +33,10 @@ void setup() {
   
   /* Setup camera */
   camera = new Camera(this, 30, CAMERA_Y, 30);
+  
+  /* Load textures */
+  WALL_TEXTURE = loadImage("brick-wall-texture.jpg");
+  GROUND_TEXTURE = loadImage("grass-texture.png");
 }
 
 void draw() {
@@ -186,6 +194,7 @@ int[] currentCase(final Camera camera) {
  */
 void drawWall() {
   fill(WALL_COLOR);
+  //texture(WALL_TEXTURE);
   drawBox();
   noFill();
 }
@@ -205,8 +214,16 @@ void drawTree() {
  * Draws ground in current case.
  */
 void drawGround() {
-  fill(GROUND_COLOR);
-  drawRect();
+  //fill(GROUND_COLOR);
+  textureMode(IMAGE);
+  
+  beginShape(QUADS);
+  texture(GROUND_TEXTURE);
+  vertex(0, 0, 0);
+  vertex(CASE_SIZE, 0, 0);
+  vertex(CASE_SIZE, 0, CASE_SIZE);
+  vertex(0, 0, CASE_SIZE);
+  endShape();
   noFill();
 }
 
