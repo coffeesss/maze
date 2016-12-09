@@ -1,3 +1,6 @@
+import damkjer.ocd.*;
+
+/* Default colors */
 final color SKY_COLOR = #adccff;
 final color WALL_COLOR = #c43f38;
 final color GROUND_COLOR = #89ff93;
@@ -7,6 +10,7 @@ final color TREE_COLOR = #3a8725;
 final float CASE_SIZE = 10;  // size of one case
 
 char[][] map;  // loaded map
+Camera cam;
 
 void setup() {
   size(1000, 600, P3D);
@@ -22,7 +26,8 @@ void setup() {
     }
   }
   
-  printArray(map);
+  /* Setup camera */
+  cam = new Camera(this, 30, -5, 30);
 }
 
 void draw() {
@@ -31,16 +36,26 @@ void draw() {
   background(SKY_COLOR);
   translate(width / 2, height / 2, 0);
   
-  /* Position camera */
-  // TODO: remove it later
-  final float camPosX = cos(map(mouseX, 0, width, -PI, 0)) * 200;
-  final float camPosY = sin(map(mouseY, 0, height, -PI, PI)) * 200;
-  final float camPosZ = cos(map(mouseY, 0, height, -PI, PI)) * 200;
+  /* Navigate camera */
+  if (keyPressed && key == CODED) {
+    switch (keyCode) {
+      case UP:
+        cam.dolly(-0.5);
+        break;
+      case DOWN:
+        cam.dolly(0.5);
+        break;
+      case LEFT:
+        cam.truck(-0.5);
+        break;
+      case RIGHT:
+        cam.truck(0.5);
+        break;
+    }
+  }
   
-  camera(
-    camPosX, camPosY, camPosZ,
-    0, 0, 0,
-    0, 1, 0);
+  /* Pose camera */
+  cam.feed();
   
   /* Draw map */
   for (int row = 0; row < map.length; row++) {
@@ -70,6 +85,11 @@ void draw() {
     
     popMatrix();
   }
+}
+
+// TODO: remake it
+void mouseMoved() {
+  cam.look(radians(mouseX - pmouseX) / 2.0, radians(mouseY - pmouseY) / 2.0);
 }
 
 /**
