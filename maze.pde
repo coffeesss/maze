@@ -53,45 +53,16 @@ void draw() {
       
       switch (map[row][col]) {
         case '#':
-          translate(CASE_SIZE / 2, -CASE_SIZE / 2, CASE_SIZE / 2);
-          fill(WALL_COLOR);
-          box(CASE_SIZE);
-          noFill();
+          drawWall();
           break;
         case '$':
-          fill(GROUND_COLOR);
-          beginShape(QUADS);
-          vertex(0, 0, 0);
-          vertex(CASE_SIZE, 0, 0);
-          vertex(CASE_SIZE, 0, CASE_SIZE);
-          vertex(0, 0, CASE_SIZE);
-          endShape();
-          noFill();
-          
-          translate(CASE_SIZE / 2, -CASE_SIZE / 2, CASE_SIZE / 2);
-          fill(TREE_COLOR);
-          sphere(CASE_SIZE / 2);
-          noFill();
+          drawTree();
           break;
         case '~':
-          fill(WATER_COLOR);
-          beginShape(QUADS);
-          vertex(0, 0, 0);
-          vertex(CASE_SIZE, 0, 0);
-          vertex(CASE_SIZE, 0, CASE_SIZE);
-          vertex(0, 0, CASE_SIZE);
-          endShape();
-          noFill();
+          drawWater();
           break;
         default:
-          fill(GROUND_COLOR);
-          beginShape(QUADS);
-          vertex(0, 0, 0);
-          vertex(CASE_SIZE, 0, 0);
-          vertex(CASE_SIZE, 0, CASE_SIZE);
-          vertex(0, 0, CASE_SIZE);
-          endShape();
-          noFill();
+          drawGround();
       }
 
       popMatrix();
@@ -99,4 +70,74 @@ void draw() {
     
     popMatrix();
   }
+}
+
+/**
+ * Draws wall in current case.
+ */
+void drawWall() {
+  fill(WALL_COLOR);
+  drawBox();
+  noFill();
+}
+
+/**
+ * Draws tree in current case.
+ */
+void drawTree() {
+  drawGround();
+  
+  fill(TREE_COLOR);
+  drawSphere();
+  noFill();
+}
+
+/**
+ * Draws ground in current case.
+ */
+void drawGround() {
+  fill(GROUND_COLOR);
+  drawRect();
+  noFill();
+}
+
+/**
+ * Draws water in current case.
+ */
+void drawWater() {
+  fill(WATER_COLOR);
+  drawRect();
+  noFill();
+}
+
+/**
+ * Draws rectangle in current case.
+ */
+void drawRect() {
+  beginShape(QUADS);
+  vertex(0, 0, 0);
+  vertex(CASE_SIZE, 0, 0);
+  vertex(CASE_SIZE, 0, CASE_SIZE);
+  vertex(0, 0, CASE_SIZE);
+  endShape();
+}
+
+/**
+ * Draws box in current case.
+ */
+void drawBox() {
+  pushMatrix();
+  translate(CASE_SIZE / 2, -CASE_SIZE / 2, CASE_SIZE / 2);
+  box(CASE_SIZE);
+  popMatrix();
+}
+
+/**
+ * Draws sphere in current case.
+ */
+void drawSphere() {
+  pushMatrix();
+  translate(CASE_SIZE / 2, -CASE_SIZE / 2, CASE_SIZE / 2);
+  sphere(CASE_SIZE / 2);
+  popMatrix();
 }
