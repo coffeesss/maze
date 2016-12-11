@@ -10,6 +10,7 @@ final color TREE_COLOR = #3a8725;
 /* Textures */
 PImage WALL_TEXTURE;
 PImage GROUND_TEXTURE;
+PImage WATER_TEXTURE;
 
 final float CASE_SIZE = 10;  // size of one case
 final float CAMERA_Y = -5;   // camera permanent attitude
@@ -37,6 +38,8 @@ void setup() {
   /* Load textures */
   WALL_TEXTURE = loadImage("brick-wall-texture.jpg");
   GROUND_TEXTURE = loadImage("grass-texture.png");
+  WATER_TEXTURE = loadImage("water-texture.jpg");
+  textureMode(NORMAL);
 }
 
 void draw() {
@@ -214,15 +217,12 @@ void drawTree() {
  * Draws ground in current case.
  */
 void drawGround() {
-  //fill(GROUND_COLOR);
-  textureMode(IMAGE);
-  
   beginShape(QUADS);
   texture(GROUND_TEXTURE);
-  vertex(0, 0, 0);
-  vertex(CASE_SIZE, 0, 0);
-  vertex(CASE_SIZE, 0, CASE_SIZE);
-  vertex(0, 0, CASE_SIZE);
+  vertex(0, 0, 0, 0, 0);
+  vertex(CASE_SIZE, 0, 0, 1, 0);
+  vertex(CASE_SIZE, 0, CASE_SIZE, 1, 1);
+  vertex(0, 0, CASE_SIZE, 0, 1);
   endShape();
   noFill();
 }
@@ -231,21 +231,14 @@ void drawGround() {
  * Draws water in current case.
  */
 void drawWater() {
-  fill(WATER_COLOR);
-  drawRect();
-  noFill();
-}
-
-/**
- * Draws rectangle in current case.
- */
-void drawRect() {
   beginShape(QUADS);
-  vertex(0, 0, 0);
-  vertex(CASE_SIZE, 0, 0);
-  vertex(CASE_SIZE, 0, CASE_SIZE);
-  vertex(0, 0, CASE_SIZE);
+  texture(WATER_TEXTURE);
+  vertex(0, 0, 0, 0, 0);
+  vertex(CASE_SIZE, 0, 0, 1, 0);
+  vertex(CASE_SIZE, 0, CASE_SIZE, 1, 1);
+  vertex(0, 0, CASE_SIZE, 0, 1);
   endShape();
+  noFill();
 }
 
 /**
