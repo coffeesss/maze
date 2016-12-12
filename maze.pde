@@ -1,4 +1,5 @@
 import damkjer.ocd.*;
+import shapes3d.*;
 
 /* Default colors */
 final color SKY_COLOR = #adccff;
@@ -11,6 +12,7 @@ final color TREE_COLOR = #3a8725;
 PImage WALL_TEXTURE;
 PImage GROUND_TEXTURE;
 PImage WATER_TEXTURE;
+PImage TREE_TEXTURE;
 
 final float CASE_SIZE = 10;  // size of one case
 final float CAMERA_Y = -5;   // camera permanent attitude
@@ -20,6 +22,7 @@ Camera camera;
 
 void setup() {
   size(1000, 600, P3D);
+  noStroke();
   
   /* Load map from file */
   final String[] lines = loadStrings("default.map");
@@ -39,6 +42,7 @@ void setup() {
   WALL_TEXTURE = loadImage("brick-wall-texture.jpg");
   GROUND_TEXTURE = loadImage("grass-texture.png");
   WATER_TEXTURE = loadImage("water-texture.jpg");
+  TREE_TEXTURE = loadImage("tree-texture.jpg");
   textureMode(NORMAL);
 }
 
@@ -196,9 +200,15 @@ int[] currentCase(final Camera camera) {
  * Draws wall in current case.
  */
 void drawWall() {
-  fill(WALL_COLOR);
-  //texture(WALL_TEXTURE);
-  drawBox();
+  final Box box = new Box(this, CASE_SIZE);
+  box.drawMode(S3D.TEXTURE);
+  box.setTexture(WALL_TEXTURE);
+  
+  pushMatrix();
+  translate(CASE_SIZE / 2, -CASE_SIZE / 2, CASE_SIZE / 2);
+  box.draw();
+  popMatrix();
+
   noFill();
 }
 
@@ -208,8 +218,16 @@ void drawWall() {
 void drawTree() {
   drawGround();
   
-  fill(TREE_COLOR);
-  drawSphere();
+  final Ellipsoid tree = new Ellipsoid(this, 20, 30);
+  tree.setTexture(TREE_TEXTURE);
+  tree.drawMode(Shape3D.TEXTURE);
+  tree.setRadius(CASE_SIZE / 2);
+
+  pushMatrix();
+  translate(CASE_SIZE / 2, -CASE_SIZE / 2, CASE_SIZE / 2);
+  tree.draw();
+  popMatrix();
+  
   noFill();
 }
 
@@ -239,16 +257,6 @@ void drawWater() {
   vertex(0, 0, CASE_SIZE, 0, 1);
   endShape();
   noFill();
-}
-
-/**
- * Draws box in current case.
- */
-void drawBox() {
-  pushMatrix();
-  translate(CASE_SIZE / 2, -CASE_SIZE / 2, CASE_SIZE / 2);
-  box(CASE_SIZE);
-  popMatrix();
 }
 
 /**
