@@ -17,6 +17,9 @@ PImage TREE_TEXTURE;
 final float CASE_SIZE = 10;  // size of one case
 final float CAMERA_Y = -5;   // camera permanent attitude
 
+// TODO: remove it later
+float ldX, ldY, ldZ = 0;
+
 char[][] map;  // loaded map
 Camera camera;
 
@@ -51,6 +54,34 @@ void draw() {
   /* Clear & translate */
   background(SKY_COLOR);
   translate(width / 2, height / 2, 0);
+  
+  // TODO: remove this part after found optimal light direction
+  if (keyPressed && key != CODED) {
+    switch (key) {
+      case 'x':
+        ldX -= 0.5;
+        break;
+      case 'X':
+        ldX += 0.5;
+        break;
+      case 'y':
+        ldY -= 0.5;
+        break;
+      case 'Y':
+        ldY += 0.5;
+        break;
+      case 'z':
+        ldZ -= 0.5;
+        break;
+      case 'Z':
+        ldZ += 0.5;
+    }
+    
+    println("ldX=" + ldX + "; ldY=" + ldY + "; ldZ=" + ldZ);
+  }
+  ambientLight(200, 200, 200);
+  directionalLight(255, 255, 255, ldX, ldY, ldZ);
+  
   
   /* Navigate camera */
   if (keyPressed && key == CODED) {
